@@ -1,6 +1,5 @@
 package com.example.roomdemo;
 
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -8,16 +7,19 @@ import androidx.room.PrimaryKey;
 
 import java.util.Locale;
 
+// Сущность данных - domain
+
+// Мапим сущность на таблицу БД
 @Entity(tableName = "tunes")
-class Tune {
+public class Tune {
     @PrimaryKey
     @NonNull
-    int _id;
+    int _id;  // _ для совместимости с адаптерами
     String artist, title;
     int year;
 
     // ignore annotation here
-    @Ignore
+    @Ignore // для избежания кофликта с библиотекой room
     public Tune() {
         this._id = 11;
         this.year = 1999;
@@ -33,7 +35,7 @@ class Tune {
 
     }
 
-    @Override
+    @Override // переопределение метода toString для строкового представление Объекта
     public String toString() { return String.format(Locale.getDefault(), "%s: %s (%d)", artist, title , year); }
 
 

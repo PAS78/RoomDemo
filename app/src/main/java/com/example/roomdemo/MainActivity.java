@@ -1,7 +1,5 @@
 package com.example.roomdemo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -13,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
 
@@ -27,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
         db = TunesDB.create(this, false); // открывает БД, если её нет, создаёт
 
         // отобразим данные в БД на ListView
+        // делаем выборку всех композиций
         Cursor c = db.query("SELECT * FROM tunes", null);
+        //setCursorInUIThread(c);
         SimpleCursorAdapter adapter =
                 new SimpleCursorAdapter(this, R.layout.tune_item, c, c.getColumnNames(), new int[]{R.id._id, R.id.artist, R.id.title, R.id.year}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         ListView lv = findViewById(R.id.listview);
@@ -45,28 +47,29 @@ public class MainActivity extends AppCompatActivity {
 
                 Cursor cur = adapter.getCursor();
                 int index = cur.getInt(0);
-                Log.d("mytag", "clicked on id" + index);
+                Log.d("PAS-LOG", "clicked on id" + index);
 
 
             }
         };
         lv.setOnItemClickListener(listener);
 
-
-        //setCursorInUIThread(c);
-
         // задание: создать метод для генерации случайных продуктов и
         // вставки этих данных в таблицу
 
     }
+
+    // Упрощает использование и обновление Курсора (данных полученных из таблицы)
     public void setCursorInUIThread(Cursor c) {
         Context ctx = getApplicationContext();
+        // Для Асинхронности и обращения в ней к элементам интерфейса
         runOnUiThread(new Runnable() {
+            // Получения данных из таблицы и передачи в Адаптер
             @Override
             public void run() {
                 SimpleCursorAdapter adapter =
                         new SimpleCursorAdapter(ctx, R.layout.tune_item, c, c.getColumnNames(), new int[]{R.id._id, R.id.artist, R.id.title, R.id.year}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-                Log.d("mytag", "Records in adapter: " + adapter.getCount());
+                Log.d("PAS-LOG", "Records in adapter: " + adapter.getCount());
                 ListView lv = findViewById(R.id.listview);
                 lv.setAdapter(adapter);
             }
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    // Удаление через отдельный Асинхронный поток
     public void onClearClick(View v) {
         new Thread() {
             @Override
@@ -88,20 +91,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // Добаваление записи также в отдельном потоке
     public void onAddTuneClick(View v) {
         new Thread() {
             @Override
             public void run() {
 
+                // Получаем Интерфейс обращения к таблице
                 Playlist playlist = db.playlist();
 
-                Random r = new Random();
-                Tune t = new Tune(r.nextInt(10000), "The Prodigy", "Matrix theme", 2000);
-                playlist.insert(t);
+                Random random = new Random();
+                // ! Нужна проверка на уникальность id
+                Tune tune = new Tune(random.nextInt(10000), "The Prodigy", "Matrix theme", 2000);
+                playlist.insert(tune);
 
-                Cursor c = db.query("SELECT * FROM tunes", null);
-                Log.d("mytag", "Records after insert: "+c.getCount());
-                setCursorInUIThread(c);
+                Cursor cursor = db.query("SELECT * FROM tunes", null);
+                Log.d("PAS-LOG", "Records after insert: " + cursor.getCount());
+                setCursorInUIThread(cursor);
             }
         }.start(); // запустит созданный поток
     }

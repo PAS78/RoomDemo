@@ -8,7 +8,10 @@ import androidx.room.Update;
 
 import java.util.List;
 
-@Dao
+// Список песен (Плей лист)
+
+@Dao // Объект доступа к данным
+    // Указываем как образом осуществляем выборку, вставку и адуление данных
 interface Playlist {
     @Query("SELECT * FROM tunes ORDER BY title")
     List<Tune> selectAll();
@@ -19,12 +22,12 @@ interface Playlist {
     @Query("SELECT * FROM tunes WHERE _id=:id")
     Tune findById(int id);
 
-    @Insert
+    @Insert // доделать
     void insert(Tune... tunes);
 
-    @Delete
+    @Delete // доделать
     void delete(Tune... tunes);
 
-    @Update
+    @Update // доделать
     void update(Tune... tunes);
 }
