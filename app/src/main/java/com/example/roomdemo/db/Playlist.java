@@ -1,4 +1,4 @@
-package com.example.roomdemo;
+package com.example.roomdemo.db;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -6,13 +6,15 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.roomdemo.domain.Tune;
+
 import java.util.List;
 
 // Список песен (Плей лист)
 
 @Dao // Объект доступа к данным
-    // Указываем как образом осуществляем выборку, вставку и адуление данных
-interface Playlist {
+// Указываем каким образом осуществляем выборку, вставку и адуление данных
+public interface Playlist {
     @Query("SELECT * FROM tunes ORDER BY title")
     List<Tune> selectAll();
 
@@ -22,12 +24,19 @@ interface Playlist {
     @Query("SELECT * FROM tunes WHERE _id=:id")
     Tune findById(int id);
 
-    @Insert // доделать
+    // Поолучаем максимальный id для инкримента следующего
+    @Query("SELECT MAX(_id) FROM tunes")
+    int findMaxid();
+
+    @Insert
+        // доделать
     void insert(Tune... tunes);
 
-    @Delete // доделать
+    @Delete
+        // доделать
     void delete(Tune... tunes);
 
-    @Update // доделать
+    @Update
+        // доделать
     void update(Tune... tunes);
 }

@@ -1,4 +1,4 @@
-package com.example.roomdemo;
+package com.example.roomdemo.domain;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -14,9 +14,9 @@ import java.util.Locale;
 public class Tune {
     @PrimaryKey
     @NonNull
-    int _id;  // _ для совместимости с адаптерами
-    String artist, title;
-    int year;
+    public int _id;  // _ для совместимости с адаптерами
+    public String artist, title;
+    public int year;
 
     // ignore annotation here
     @Ignore // для избежания кофликта с библиотекой room
@@ -36,7 +36,9 @@ public class Tune {
     }
 
     @Override // переопределение метода toString для строкового представление Объекта
-    public String toString() { return String.format(Locale.getDefault(), "%s: %s (%d)", artist, title , year); }
+    public String toString() {
+        return String.format(Locale.getDefault(), "%s: %s (%d)", artist, title, year);
+    }
 
 
 }

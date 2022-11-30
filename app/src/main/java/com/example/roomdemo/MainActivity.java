@@ -14,6 +14,10 @@ import android.widget.SimpleCursorAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.roomdemo.db.Playlist;
+import com.example.roomdemo.db.TunesDB;
+import com.example.roomdemo.domain.Tune;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -100,9 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 // Получаем Интерфейс обращения к таблице
                 Playlist playlist = db.playlist();
 
-                Random random = new Random();
-                // ! Нужна проверка на уникальность id
-                Tune tune = new Tune(random.nextInt(10000), "The Prodigy", "Matrix theme", 2000);
+                Tune tune = new Tune(playlist.findMaxid() + 1, "The Prodigy", "Matrix theme", 2000);
                 playlist.insert(tune);
 
                 Cursor cursor = db.query("SELECT * FROM tunes", null);
