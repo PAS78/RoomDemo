@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = TunesDB.create(this, false); // открывает БД, если её нет, создаёт
+        db = TunesDB.get(this); // открывает БД, если её нет - создать
 
         // отобразим данные в БД на ListView
         // делаем выборку всех композиций

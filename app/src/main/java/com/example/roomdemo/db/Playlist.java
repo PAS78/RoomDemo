@@ -29,14 +29,11 @@ public interface Playlist {
     int findMaxId();
 
     @Insert
-        // доделать
     void insert(Tune... tunes);
 
-    @Delete ()
-        // доделать
+    @Delete()
     void delete(Tune... tunes);
 
     @Update
-        // доделать
     void update(Tune... tunes);
 }

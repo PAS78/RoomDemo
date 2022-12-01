@@ -15,17 +15,17 @@ import com.example.roomdemo.domain.Tune;
 @Database(entities = {Tune.class}, version = 3)
 public abstract class TunesDB extends RoomDatabase {
 
-    // возвращает Интерфейс обращяени к данным
+    // возвращает Интерфейс обращения к данным
     public abstract Playlist playlist();
 
     private static final String DB_NAME = "tunes.db";
 
     // ссылка на экземпляр класса
-    // volatile - переменная без кэширования
+    // volatile - переменная без кэширования Виртуальной машиной
     private static volatile TunesDB INSTANCE = null;
 
-    // метод получени БД
-    synchronized static TunesDB get(Context ctxt) {
+    // метод получения БД
+    public synchronized static TunesDB get(Context ctxt) {
 
         // проверяем есть ли БД в памяти (определен ли INSTANCE)
         if (INSTANCE == null) {
