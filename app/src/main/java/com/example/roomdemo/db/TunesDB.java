@@ -12,7 +12,7 @@ import com.example.roomdemo.domain.Tune;
 
 // Указывается для какой модели данных создаем БД
 // При измении модели данных нужно поменять версию
-@Database(entities = {Tune.class}, version = 2)
+@Database(entities = {Tune.class}, version = 3)
 public abstract class TunesDB extends RoomDatabase {
 
     // возвращает Интерфейс обращяени к данным

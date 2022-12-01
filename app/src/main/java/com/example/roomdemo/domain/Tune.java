@@ -14,7 +14,7 @@ import java.util.Locale;
 public class Tune {
     @PrimaryKey
     @NonNull
-    public int _id;  // _ для совместимости с адаптерами
+    public long _id;  // _ для совместимости с адаптерами
     public String artist, title;
     public int year;
 
@@ -27,7 +27,7 @@ public class Tune {
         this.title = "";
     }
 
-    public Tune(int _id, String artist, String title, int year) {
+    public Tune(long _id, String artist, String title, int year) {
         this._id = _id;
         this.artist = artist;
         this.title = title;

@@ -22,17 +22,17 @@ public interface Playlist {
     List<Tune> selectThisYearTunes();
 
     @Query("SELECT * FROM tunes WHERE _id=:id")
-    Tune findById(int id);
+    Tune findById(long id);
 
-    // Поолучаем максимальный id для инкримента следующего
+    // Получаем максимальный id для инкримента следующего
     @Query("SELECT MAX(_id) FROM tunes")
-    int findMaxid();
+    int findMaxId();
 
     @Insert
         // доделать
     void insert(Tune... tunes);
 
-    @Delete
+    @Delete ()
         // доделать
     void delete(Tune... tunes);
 

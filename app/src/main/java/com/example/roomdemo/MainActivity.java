@@ -18,8 +18,6 @@ import com.example.roomdemo.db.Playlist;
 import com.example.roomdemo.db.TunesDB;
 import com.example.roomdemo.domain.Tune;
 
-import java.util.Random;
-
 public class MainActivity extends AppCompatActivity {
     TunesDB db;
 
@@ -39,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         ListView lv = findViewById(R.id.listview);
         lv.setAdapter(adapter);
 
+        // Выбор в ListView
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -46,13 +45,9 @@ public class MainActivity extends AppCompatActivity {
                 ColorDrawable d = (ColorDrawable) view.getBackground();
                 if (d != null && d.getColor() == Color.YELLOW) {
                     view.setBackgroundColor(Color.TRANSPARENT);
+                    // TODO задание: удалить запись, которая выделена пользователем (position - номер в списке)
+                    deleteTune(id);
                 } else view.setBackgroundColor(Color.YELLOW);
-                // TODO задание: удалить запись, которая выделена пользователем (position - номер в списке)
-
-                Cursor cur = adapter.getCursor();
-                int index = cur.getInt(0);
-                Log.d("PAS-LOG", "clicked on id" + index);
-
 
             }
         };
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         Context ctx = getApplicationContext();
         // Для Асинхронности и обращения в ней к элементам интерфейса
         runOnUiThread(new Runnable() {
-            // Получения данных из таблицы и передачи в Адаптер
+            // Получения данных из таблицы и передача в Адаптер
             @Override
             public void run() {
                 SimpleCursorAdapter adapter =
@@ -81,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Удаление через отдельный Асинхронный поток
+    // Полное удаление через отдельный Асинхронный поток
     public void onClearClick(View v) {
         new Thread() {
             @Override
@@ -104,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 // Получаем Интерфейс обращения к таблице
                 Playlist playlist = db.playlist();
 
-                Tune tune = new Tune(playlist.findMaxid() + 1, "The Prodigy", "Matrix theme", 2000);
+                Tune tune = new Tune(playlist.findMaxId() + 1, "The Prodigy", "Matrix theme", 2000);
                 playlist.insert(tune);
 
                 Cursor cursor = db.query("SELECT * FROM tunes", null);
@@ -113,4 +108,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start(); // запустит созданный поток
     }
+
+    // Удаление записи также в отдельном потоке
+    public void deleteTune(long id) {
+        new Thread() {
+            @Override
+            public void run() {
+
+                // Получаем Интерфейс обращения к таблице
+                Playlist playlist = db.playlist();
+
+                Tune tune = playlist.findById(id);
+                playlist.delete(tune);
+
+                Cursor cursor = db.query("SELECT * FROM tunes", null);
+                Log.d("PAS-LOG", "Records after delete: " + cursor.getCount());
+                setCursorInUIThread(cursor);
+            }
+        }.start(); // запустит созданный поток
+    }
+
 }
